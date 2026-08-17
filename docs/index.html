@@ -8,30 +8,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="nav shell">
-    <a class="brand" href="#top" aria-label="Security Evidence Collector home">
-      <span class="mark">S</span>
-      <span>SpectraSec <strong>Security Evidence Collector</strong></span>
-    </a>
-    <nav>
-      <a href="#how">How it works</a>
-      <a href="#evidence">Evidence Pack</a>
-      <a href="https://github.com/Cyber-G3/security-evidence-collector" target="_blank" rel="noreferrer">GitHub</a>
-    </nav>
-  </header>
-
+  <header class="nav shell"><a class="brand" href="#top"><span class="mark">S</span><span>SpectraSec <strong>Security Evidence Collector</strong></span></a><nav><a href="#how">How it works</a><a href="#try">Quick scan</a><a href="#evidence">Evidence Pack</a><a href="https://github.com/Cyber-G3/security-evidence-collector" target="_blank" rel="noreferrer">GitHub</a></nav></header>
   <main id="top">
     <section class="hero shell">
       <div class="eyebrow">OPEN-SOURCE · PYTHON · GITHUB API</div>
       <h1>Turn repository security settings into <span>audit-ready technical evidence.</span></h1>
-      <p class="lead">Collect deterministic GitHub security checks, normalize the results, generate findings, map evidence to internal controls, and verify every artifact with SHA-256.</p>
-      <div class="actions">
-        <a class="button primary" href="#try">Generate a command</a>
-        <a class="button secondary" href="https://github.com/Cyber-G3/security-evidence-collector/tree/main/examples/demo-evidence-pack" target="_blank" rel="noreferrer">View demo evidence</a>
-      </div>
-      <div class="terminal" aria-label="Example terminal output">
-        <div class="terminal-bar"><span></span><span></span><span></span></div>
-        <pre><code>$ sec-evidence collect github acme/api --output ./evidence
+      <p class="lead">Run a no-token public quick scan in the browser, or use the full local collector for normalized evidence, findings, control mappings and SHA-256 verification.</p>
+      <div class="actions"><a class="button primary" href="#try">Scan a public repo</a><a class="button secondary" href="https://github.com/Cyber-G3/security-evidence-collector/tree/main/examples/demo-evidence-pack" target="_blank" rel="noreferrer">View demo evidence</a></div>
+      <div class="terminal"><div class="terminal-bar"><span></span><span></span><span></span></div><pre><code>$ sec-evidence collect github acme/api --output ./evidence
 
 PASS     Security policy
 PASS     CODEOWNERS
@@ -41,93 +25,30 @@ FAIL     Workflow token permissions
 
 Evidence Pack created
 SHA-256 manifest generated
-Framework references: ISO/IEC 27001:2022 · NIS2</code></pre>
-      </div>
+Framework references: ISO/IEC 27001:2022 · NIS2</code></pre></div>
     </section>
-
-    <section class="metrics shell" aria-label="Core properties">
-      <article><strong>Deterministic</strong><span>No LLM required at runtime</span></article>
-      <article><strong>Local-first</strong><span>No evidence SaaS backend</span></article>
-      <article><strong>Integrity-aware</strong><span>SHA-256 manifest verification</span></article>
-      <article><strong>Compliance-safe</strong><span>Evidence support, not certification claims</span></article>
-    </section>
-
-    <section id="how" class="section shell">
-      <div class="section-heading">
-        <div class="eyebrow">PIPELINE</div>
-        <h2>Collect. Normalize. Verify. Map.</h2>
-        <p>The project deliberately separates technical observations from compliance interpretation.</p>
-      </div>
-      <div class="grid four">
-        <article class="card"><span class="num">01</span><h3>Collect</h3><p>Read verifiable repository metadata and security configuration from the GitHub REST API.</p></article>
-        <article class="card"><span class="num">02</span><h3>Normalize</h3><p>Convert results into explicit PASS, FAIL, UNKNOWN, NOT_APPLICABLE, or ERROR states.</p></article>
-        <article class="card"><span class="num">03</span><h3>Verify</h3><p>Hash generated artifacts and detect missing or modified evidence through the manifest.</p></article>
-        <article class="card"><span class="num">04</span><h3>Map</h3><p>Relate technical checks to internal controls and supporting ISO 27001 / NIS2 references.</p></article>
-      </div>
-    </section>
-
+    <section class="metrics shell"><article><strong>Deterministic</strong><span>No LLM required at runtime</span></article><article><strong>Local-first</strong><span>No evidence SaaS backend</span></article><article><strong>Integrity-aware</strong><span>SHA-256 manifest verification</span></article><article><strong>Compliance-safe</strong><span>Evidence support, not certification claims</span></article></section>
+    <section id="how" class="section shell"><div class="section-heading"><div class="eyebrow">PIPELINE</div><h2>Collect. Normalize. Verify. Map.</h2><p>The project deliberately separates technical observations from compliance interpretation.</p></div><div class="grid four"><article class="card"><span class="num">01</span><h3>Collect</h3><p>Read verifiable repository metadata and security configuration from the GitHub REST API.</p></article><article class="card"><span class="num">02</span><h3>Normalize</h3><p>Convert results into explicit PASS, FAIL, UNKNOWN, NOT_APPLICABLE, or ERROR states.</p></article><article class="card"><span class="num">03</span><h3>Verify</h3><p>Hash generated artifacts and detect missing or modified evidence through the manifest.</p></article><article class="card"><span class="num">04</span><h3>Map</h3><p>Relate technical checks to internal controls and supporting ISO 27001 / NIS2 references.</p></article></div></section>
     <section id="try" class="section shell try-panel">
-      <div>
-        <div class="eyebrow">QUICK START</div>
-        <h2>Generate your first collection command.</h2>
-        <p>Enter a public GitHub repository in <code>OWNER/REPOSITORY</code> format. This page never asks for or stores a GitHub token.</p>
-      </div>
-      <form id="commandForm" class="command-form">
-        <label for="repoInput">GitHub repository</label>
-        <div class="input-row">
-          <input id="repoInput" name="repository" placeholder="Cyber-G3/security-evidence-collector" autocomplete="off" spellcheck="false">
-          <button class="button primary" type="submit">Generate</button>
-        </div>
-        <p id="formError" class="error" role="alert"></p>
-      </form>
-      <div id="commandResult" class="command-result" hidden>
-        <code id="commandText"></code>
-        <button id="copyButton" class="copy-button" type="button">Copy</button>
-      </div>
-      <p class="note">The landing page does not run repository scans in the browser. Collection remains local or in GitHub Actions so credentials and evidence stay under your control.</p>
+      <div><div class="eyebrow">LIVE PUBLIC QUICK SCAN</div><h2>Analyze a public GitHub repository.</h2><p>Enter <code>OWNER/REPOSITORY</code>. The browser reads only public GitHub API data and never asks for a token.</p></div>
+      <form id="commandForm" class="command-form"><label for="repoInput">GitHub repository</label><div class="input-row"><input id="repoInput" name="repository" value="Cyber-G3/security-evidence-collector" placeholder="Cyber-G3/security-evidence-collector" autocomplete="off" spellcheck="false"><button id="scanButton" class="button primary" type="button">Analyze</button><button class="button secondary" type="submit">CLI command</button></div><p id="formError" class="error" role="alert"></p></form>
+      <p id="scanStatus" class="note" aria-live="polite">Ready. Public scans are intentionally limited to evidence readable without authentication.</p>
+      <div id="scanResults" class="scan-results" aria-live="polite"></div>
+      <div id="commandResult" class="command-result" hidden><code id="commandText"></code><button id="copyButton" class="copy-button" type="button">Copy</button></div>
+      <p class="note"><strong>Public scan ≠ full collector.</strong> Branch protection, Actions administration, secret-scanning configuration and other privileged controls may require authenticated API access. Use the CLI or GitHub Actions workflow for the full Evidence Pack.</p>
     </section>
-
-    <section id="evidence" class="section shell split">
-      <div>
-        <div class="eyebrow">OUTPUT</div>
-        <h2>A structured Evidence Pack, not a screenshot folder.</h2>
-        <p>Each collection creates machine-readable evidence, deterministic findings, control mappings, framework references, a human-readable report, and an integrity manifest.</p>
-        <a class="text-link" href="https://github.com/Cyber-G3/security-evidence-collector/tree/main/examples/demo-evidence-pack" target="_blank" rel="noreferrer">Inspect the sanitized demo →</a>
-      </div>
-      <pre class="tree"><code>evidence-pack-&lt;UUID&gt;/
+    <section id="evidence" class="section shell split"><div><div class="eyebrow">OUTPUT</div><h2>A structured Evidence Pack, not a screenshot folder.</h2><p>The full collector creates machine-readable evidence, deterministic findings, control mappings, framework references, a human-readable report, and an integrity manifest.</p><a class="text-link" href="https://github.com/Cyber-G3/security-evidence-collector/tree/main/examples/demo-evidence-pack" target="_blank" rel="noreferrer">Inspect the sanitized demo →</a></div><pre class="tree"><code>evidence-pack-&lt;UUID&gt;/
 ├── metadata.json
 ├── manifest.json
 ├── normalized/github/
 ├── findings/findings.json
 ├── controls/check-control-mappings.json
 ├── frameworks/framework-references.json
-└── reports/report.md</code></pre>
-    </section>
-
-    <section class="section shell">
-      <div class="section-heading">
-        <div class="eyebrow">CURRENT COVERAGE</div>
-        <h2>GitHub governance and DevSecOps evidence.</h2>
-      </div>
-      <div class="grid two">
-        <article class="card"><h3>Repository governance</h3><ul><li>SECURITY.md and CODEOWNERS</li><li>Default branch and archive state</li><li>Branch protection</li><li>Required reviews and status checks</li></ul></article>
-        <article class="card"><h3>DevSecOps controls</h3><ul><li>Dependabot configuration</li><li>Secret scanning and push protection</li><li>GitHub Actions policy</li><li>Workflow token permissions and SHA pinning</li></ul></article>
-      </div>
-    </section>
-
-    <section class="cta shell">
-      <div>
-        <div class="eyebrow">OPEN SOURCE</div>
-        <h2>Inspect the code. Run it locally. Verify the evidence.</h2>
-      </div>
-      <a class="button primary" href="https://github.com/Cyber-G3/security-evidence-collector" target="_blank" rel="noreferrer">Open repository</a>
-    </section>
+└── reports/report.md</code></pre></section>
+    <section class="section shell"><div class="section-heading"><div class="eyebrow">CURRENT COVERAGE</div><h2>GitHub governance and DevSecOps evidence.</h2></div><div class="grid two"><article class="card"><h3>Repository governance</h3><ul><li>SECURITY.md and CODEOWNERS</li><li>Default branch and archive state</li><li>Branch protection</li><li>Required reviews and status checks</li></ul></article><article class="card"><h3>DevSecOps controls</h3><ul><li>Dependabot configuration</li><li>Secret scanning and push protection</li><li>GitHub Actions policy</li><li>Workflow token permissions and SHA pinning</li></ul></article></div></section>
+    <section class="cta shell"><div><div class="eyebrow">OPEN SOURCE</div><h2>Inspect the code. Run it locally. Verify the evidence.</h2></div><a class="button primary" href="https://github.com/Cyber-G3/security-evidence-collector" target="_blank" rel="noreferrer">Open repository</a></section>
   </main>
-
-  <footer class="footer shell">
-    <span>Security Evidence Collector · SpectraSec</span>
-    <span>Apache-2.0 · Evidence support ≠ compliance determination</span>
-  </footer>
+  <footer class="footer shell"><span>Security Evidence Collector · SpectraSec</span><span>Apache-2.0 · Evidence support ≠ compliance determination</span></footer>
   <script src="app.js"></script>
 </body>
 </html>
