@@ -46,6 +46,11 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = [
+  "B008",  # Typer intentionally declares Argument/Option metadata in function defaults.
+  "E501",  # Formatting/readability is handled independently of hard line-length lint failures.
+  "UP017", # timezone.utc remains explicit and supported on Python 3.12+.
+]
 
 [tool.mypy]
 python_version = "3.12"
