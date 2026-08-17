@@ -1,0 +1,9 @@
+{
+  "compliance_determination": false,
+  "mapping_type": "technical_check_to_internal_control",
+  "mappings": {
+    "github.governance.codeowners": [
+      "SEC-SDLC-001"
+    ]
+  }
+}
