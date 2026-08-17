@@ -4,11 +4,11 @@
 
 Open-source security evidence collection and control-mapping toolkit for audit and compliance workflows.
 
-> Development status: **Alpha / v0.1-dev**. The GitHub collector is under active implementation and is not yet production-ready.
+> Development status: **Alpha / v0.1-dev**. The GitHub collector and evidence automation are under active implementation and are not yet production-ready.
 
 ## Why this exists
 
-Security and compliance teams often collect technical evidence manually across repositories and platforms. This project aims to provide a deterministic, local-first pipeline:
+Security and compliance teams often collect technical evidence manually across repositories and platforms. This project provides a deterministic, local-first pipeline:
 
 ```text
 Source -> Collect -> Normalize -> Hash -> Map -> Report
@@ -36,10 +36,43 @@ A missing or inaccessible branch-protection response is deliberately classified 
 ```bash
 sec-evidence --help
 sec-evidence version
-sec-evidence collect github OWNER/REPOSITORY
+sec-evidence collect github OWNER/REPOSITORY --output ./evidence
+sec-evidence verify ./evidence/evidence-pack-<UUID>
 ```
 
-Evidence-pack verification and report generation remain planned commands while their implementation is completed.
+The collect command creates an integrity-verifiable Evidence Pack containing normalized evidence, deterministic findings, internal control mappings, ISO/IEC 27001:2022 and NIS2 supporting references, and a Markdown report.
+
+## Automated evidence collection
+
+The repository includes `.github/workflows/evidence-automation.yml`.
+
+It can be launched manually with **workflow_dispatch** and also runs weekly on Monday. The workflow:
+
+1. installs the project on GitHub-hosted Ubuntu;
+2. collects evidence against the current repository;
+3. generates a local Evidence Pack;
+4. verifies the SHA-256 manifest;
+5. uploads the verified pack as a GitHub Actions artifact for 30 days.
+
+The workflow uses the built-in `GITHUB_TOKEN`; no external paid API or server is required for this self-assessment workflow.
+
+## Evidence Pack
+
+```text
+evidence-pack-<UUID>/
+├── metadata.json
+├── manifest.json
+├── normalized/
+│   └── github/
+├── findings/
+│   └── findings.json
+├── controls/
+│   └── check-control-mappings.json
+├── frameworks/
+│   └── framework-references.json
+└── reports/
+    └── report.md
+```
 
 ## Evidence principles
 
@@ -47,8 +80,8 @@ Evidence-pack verification and report generation remain planned commands while t
 - explicit `PASS`, `FAIL`, `UNKNOWN`, `NOT_APPLICABLE`, `ERROR` states
 - UTC timestamps and provenance
 - SHA-256 integrity verification for generated evidence artifacts
-- raw evidence separated from normalized evidence
 - control mappings separated from technical checks
+- framework references separated from compliance determinations
 - no LLM dependency required at runtime
 - local-first processing and no telemetry
 
@@ -56,27 +89,29 @@ Evidence-pack verification and report generation remain planned commands while t
 
 ```mermaid
 flowchart LR
-    A[Source API] --> B[Collector]
-    B --> C[Checks]
+    A[GitHub API] --> B[Collector]
+    B --> C[Technical Checks]
     C --> D[Normalized Evidence]
-    D --> E[Integrity Engine]
-    D --> F[Internal Controls]
-    F --> G[Framework References]
-    D --> H[Reports]
+    D --> E[Findings]
+    D --> F[Integrity Engine]
+    D --> G[Internal Controls]
+    G --> H[ISO 27001 / NIS2 References]
+    D --> I[Reports]
+    F --> J[GitHub Actions Artifact]
 ```
 
 ## Technology
 
 - Python 3.12+
 - GitHub REST API
-- JSON / YAML / CSV / Markdown
+- JSON / YAML / Markdown
 - SHA-256
 - pytest / respx
 - GitHub Actions
 
 ## Roadmap
 
-- **v0.1** GitHub collector and evidence-pack foundation
+- **v0.1** GitHub collector, Evidence Pack and scheduled automation
 - **v0.2** expanded GitHub security checks
 - **v0.3** local/Linux evidence collector
 - **v0.4** vulnerability evidence integration
@@ -85,7 +120,7 @@ flowchart LR
 
 ## Security model
 
-The tool is intended to operate read-only against source systems. Credentials must be supplied through environment variables and must never be written to evidence packs or logs.
+The tool is intended to operate read-only against source systems. Credentials must be supplied through environment variables or GitHub Actions secrets and must never be written to evidence packs or logs.
 
 ## Compliance disclaimer
 
