@@ -14,3 +14,27 @@ mappings:
   github.branch.required_status_checks:
     controls: [SEC-CI-001]
     mapping_status: curated
+  github.dependencies.dependabot_config:
+    controls: [SEC-SUPPLY-001]
+    mapping_status: curated
+  github.dependencies.dependabot_security_updates:
+    controls: [SEC-VULN-001]
+    mapping_status: curated
+  github.security.secret_scanning:
+    controls: [SEC-SECRETS-001]
+    mapping_status: curated
+  github.security.push_protection:
+    controls: [SEC-SECRETS-002]
+    mapping_status: curated
+  github.security.advanced_security:
+    controls: [SEC-APPSEC-001]
+    mapping_status: curated
+  github.actions.policy:
+    controls: [SEC-CI-002]
+    mapping_status: curated
+  github.actions.sha_pinning:
+    controls: [SEC-SUPPLY-002]
+    mapping_status: curated
+  github.actions.default_workflow_permissions:
+    controls: [SEC-CI-003]
+    mapping_status: curated
