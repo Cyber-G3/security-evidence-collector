@@ -1,0 +1,35 @@
+{
+  "algorithm": "sha256",
+  "files": [
+    {
+      "path": "controls/check-control-mappings.json",
+      "sha256": "59be031a35a2fe727d3ae87718bce5dc284621228313fc412bcec102dd669470",
+      "size_bytes": 183
+    },
+    {
+      "path": "findings/findings.json",
+      "sha256": "8aa973100a15bf817985395637131e838cf84e427be4792583def923f020f5fa",
+      "size_bytes": 21
+    },
+    {
+      "path": "frameworks/framework-references.json",
+      "sha256": "b63385e2cab76460e1d99d3cc94d5ce39f6f3f0381fd0519a2c929bdde27f6de",
+      "size_bytes": 549
+    },
+    {
+      "path": "metadata.json",
+      "sha256": "1744a091e28494017e792e6f259443c8a45f8a030a2004d768d1ec807c094dd2",
+      "size_bytes": 293
+    },
+    {
+      "path": "normalized/github/github_governance_codeowners.json",
+      "sha256": "c9a31537baa37f202301cc036f0877691dcc85e3c9d855b11ea97829e6efc48d",
+      "size_bytes": 309
+    },
+    {
+      "path": "reports/report.md",
+      "sha256": "41511a33910bc252525ecb89063de7a2842f382742d8ca668b72405125d374af",
+      "size_bytes": 418
+    }
+  ]
+}
