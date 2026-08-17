@@ -23,6 +23,7 @@ dev = [
   "respx>=0.21,<1",
   "ruff>=0.6,<1",
   "mypy>=1.11,<2",
+  "types-PyYAML>=6.0,<7",
   "bandit>=1.7,<2",
   "pip-audit>=2.7,<3",
 ]
