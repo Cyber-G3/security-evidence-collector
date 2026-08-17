@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from typing import Any
+from urllib.parse import quote
 
 import httpx
 
@@ -26,7 +27,6 @@ class GitHubClient:
         }
         if self._token:
             headers["Authorization"] = f"Bearer {self._token}"
-
         self._client = httpx.Client(
             base_url=GITHUB_API_URL,
             headers=headers,
@@ -44,7 +44,6 @@ class GitHubClient:
         self.close()
 
     def get_repository(self, repository: str) -> dict[str, Any]:
-        """Return repository metadata from GET /repos/{owner}/{repo}."""
         owner, repo = self._parse_repository(repository)
         response = self._request("GET", f"/repos/{owner}/{repo}")
         payload = response.json()
@@ -52,7 +51,38 @@ class GitHubClient:
             raise ApiError("GitHub returned an unexpected repository response.")
         return payload
 
-    def _request(self, method: str, path: str) -> httpx.Response:
+    def content_exists(self, repository: str, path: str) -> bool:
+        """Return whether a repository content path exists."""
+        owner, repo = self._parse_repository(repository)
+        safe_path = "/".join(quote(part, safe="") for part in path.split("/"))
+        response = self._request(
+            "GET", f"/repos/{owner}/{repo}/contents/{safe_path}", allow_not_found=True
+        )
+        return response.status_code != 404
+
+    def get_branch_protection(self, repository: str, branch: str) -> dict[str, Any] | None:
+        """Return branch-protection data, or None when GitHub returns 404.
+
+        A 404 is intentionally treated as indeterminate by the collector because it may
+        represent an unprotected branch or insufficient permission to inspect protection.
+        """
+        owner, repo = self._parse_repository(repository)
+        safe_branch = quote(branch, safe="")
+        response = self._request(
+            "GET",
+            f"/repos/{owner}/{repo}/branches/{safe_branch}/protection",
+            allow_not_found=True,
+        )
+        if response.status_code == 404:
+            return None
+        payload = response.json()
+        if not isinstance(payload, dict):
+            raise ApiError("GitHub returned an unexpected branch protection response.")
+        return payload
+
+    def _request(
+        self, method: str, path: str, *, allow_not_found: bool = False
+    ) -> httpx.Response:
         try:
             response = self._client.request(method, path)
         except httpx.TimeoutException as exc:
@@ -71,11 +101,12 @@ class GitHubClient:
                     message += f" Reset epoch: {reset}."
                 raise ApiError(message)
             raise AuthenticationError("GitHub denied access to the requested repository resource.")
+        if response.status_code == 404 and allow_not_found:
+            return response
         if response.status_code == 404:
-            raise ApiError("Repository was not found or is not accessible with the current credentials.")
+            raise ApiError("Repository resource was not found or is not accessible.")
         if response.status_code >= 400:
             raise ApiError(f"GitHub API returned HTTP {response.status_code}.")
-
         return response
 
     @staticmethod
