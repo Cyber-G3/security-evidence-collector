@@ -1,0 +1,17 @@
+{
+  "compliance_determination": false,
+  "mapping_type": "internal_control_to_framework_reference",
+  "references_by_check": {
+    "github.governance.codeowners": [
+      {
+        "framework": "ISO_IEC_27001_2022",
+        "framework_label": "ISO/IEC 27001:2022 Annex A",
+        "internal_control": "SEC-SDLC-001",
+        "note": "Defined code ownership can support allocation of information security responsibilities.",
+        "reference": "A.5.2",
+        "relationship": "supports"
+      }
+    ]
+  },
+  "relationship_semantics": "supports"
+}
