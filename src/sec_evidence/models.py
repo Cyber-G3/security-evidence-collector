@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class CheckStatus(StrEnum):
-    PASS = "PASS"
+    PASS = "PASS"  # nosec B105 -- deterministic check state, not a credential
     FAIL = "FAIL"
     UNKNOWN = "UNKNOWN"
     NOT_APPLICABLE = "NOT_APPLICABLE"
