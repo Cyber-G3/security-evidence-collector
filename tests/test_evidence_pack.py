@@ -5,15 +5,7 @@ from sec_evidence.models import CheckResult, CheckStatus, Confidence
 
 
 def _result() -> CheckResult:
-    return CheckResult(
-        check_id="github.repository.visibility",
-        title="Repository visibility",
-        status=CheckStatus.PASS,
-        confidence=Confidence.HIGH,
-        reason="GitHub API reported public visibility.",
-        source="github",
-        collected_at=datetime(2026, 8, 17, tzinfo=timezone.utc),
-    )
+    return CheckResult(check_id="github.repository.visibility",title="Repository visibility",status=CheckStatus.PASS,confidence=Confidence.HIGH,reason="GitHub API reported public visibility.",source="github",collected_at=datetime(2026, 8, 17, tzinfo=timezone.utc))
 
 
 def test_create_and_verify_evidence_pack(tmp_path) -> None:

@@ -32,31 +32,13 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
         directory.mkdir(parents=True, exist_ok=False)
 
     started = _utc_now()
-    _write_json(
-        pack / "metadata.json",
-        {
-            "collection_id": collection_id,
-            "schema_version": "1.0",
-            "target": repository,
-            "target_type": "github_repository",
-            "tool": "security-evidence-collector",
-            "tool_version": __version__,
-            "generated_at": started.isoformat(),
-        },
-    )
+    _write_json(pack / "metadata.json", {"collection_id": collection_id,"schema_version": "1.0","target": repository,"target_type": "github_repository","tool": "security-evidence-collector","tool_version": __version__,"generated_at": started.isoformat()})
 
     for result in results:
         safe_id = result.check_id.replace(".", "_")
         _write_json(normalized / f"{safe_id}.json", result.model_dump(mode="json"))
 
-    report_lines = [
-        "# Security Evidence Report",
-        "",
-        f"Target: `{repository}`",
-        "",
-        "| Status | Check | Reason |",
-        "|---|---|---|",
-    ]
+    report_lines = ["# Security Evidence Report","",f"Target: `{repository}`","","| Status | Check | Reason |","|---|---|---|"]
     for result in results:
         reason = result.reason.replace("|", "\\|")
         report_lines.append(f"| {result.status.value} | {result.title} | {reason} |")
@@ -64,13 +46,7 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
 
     manifest_entries: list[dict[str, object]] = []
     for path in sorted(p for p in pack.rglob("*") if p.is_file() and p.name != "manifest.json"):
-        manifest_entries.append(
-            {
-                "path": path.relative_to(pack).as_posix(),
-                "sha256": sha256_file(path),
-                "size_bytes": path.stat().st_size,
-            }
-        )
+        manifest_entries.append({"path": path.relative_to(pack).as_posix(),"sha256": sha256_file(path),"size_bytes": path.stat().st_size})
     _write_json(pack / "manifest.json", {"algorithm": "sha256", "files": manifest_entries})
     return pack
 
