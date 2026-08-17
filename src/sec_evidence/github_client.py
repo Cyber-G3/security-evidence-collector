@@ -61,11 +61,7 @@ class GitHubClient:
         return response.status_code != 404
 
     def get_branch_protection(self, repository: str, branch: str) -> dict[str, Any] | None:
-        """Return branch-protection data, or None when GitHub returns 404.
-
-        A 404 is intentionally treated as indeterminate by the collector because it may
-        represent an unprotected branch or insufficient permission to inspect protection.
-        """
+        """Return branch-protection data, or None when GitHub returns 404."""
         owner, repo = self._parse_repository(repository)
         safe_branch = quote(branch, safe="")
         response = self._request(
@@ -79,6 +75,26 @@ class GitHubClient:
         if not isinstance(payload, dict):
             raise ApiError("GitHub returned an unexpected branch protection response.")
         return payload
+
+    def get_actions_permissions(self, repository: str) -> dict[str, Any] | None:
+        """Return repository Actions policy when the token can read administration settings."""
+        owner, repo = self._parse_repository(repository)
+        try:
+            response = self._request("GET", f"/repos/{owner}/{repo}/actions/permissions")
+        except AuthenticationError:
+            return None
+        payload = response.json()
+        return payload if isinstance(payload, dict) else None
+
+    def get_workflow_permissions(self, repository: str) -> dict[str, Any] | None:
+        """Return default workflow permissions when readable by the current token."""
+        owner, repo = self._parse_repository(repository)
+        try:
+            response = self._request("GET", f"/repos/{owner}/{repo}/actions/permissions/workflow")
+        except AuthenticationError:
+            return None
+        payload = response.json()
+        return payload if isinstance(payload, dict) else None
 
     def _request(
         self, method: str, path: str, *, allow_not_found: bool = False
