@@ -61,14 +61,17 @@ class GitHubClient:
         return response.status_code != 404
 
     def get_branch_protection(self, repository: str, branch: str) -> dict[str, Any] | None:
-        """Return branch-protection data, or None when GitHub returns 404."""
+        """Return branch-protection data, or None when it cannot be read conclusively."""
         owner, repo = self._parse_repository(repository)
         safe_branch = quote(branch, safe="")
-        response = self._request(
-            "GET",
-            f"/repos/{owner}/{repo}/branches/{safe_branch}/protection",
-            allow_not_found=True,
-        )
+        try:
+            response = self._request(
+                "GET",
+                f"/repos/{owner}/{repo}/branches/{safe_branch}/protection",
+                allow_not_found=True,
+            )
+        except AuthenticationError:
+            return None
         if response.status_code == 404:
             return None
         payload = response.json()
