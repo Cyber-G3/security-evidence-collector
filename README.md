@@ -4,7 +4,7 @@
 
 Open-source security evidence collection and control-mapping toolkit for audit and compliance workflows.
 
-> Development status: **Alpha / v0.1-dev**. The GitHub collector and evidence automation are under active implementation and are not yet production-ready.
+> Development status: **Alpha / v0.1-dev**. The project is in release hardening and is not yet presented as production-ready.
 
 ## Why this exists
 
@@ -18,7 +18,7 @@ The tool supports evidence workflows. It does **not** determine regulatory compl
 
 ## Current GitHub checks
 
-The current collector implements repository and governance checks for:
+The current collector implements checks for:
 
 - repository visibility
 - default branch identification
@@ -28,8 +28,17 @@ The current collector implements repository and governance checks for:
 - default-branch protection when readable through the API
 - required pull-request reviews when branch protection is readable
 - required status checks when branch protection is readable
+- Dependabot configuration
+- Dependabot security updates when exposed by the API
+- secret scanning
+- secret scanning push protection
+- GitHub Advanced Security state when exposed by the API
+- GitHub Actions execution policy
+- SHA pinning policy for Actions
+- default `GITHUB_TOKEN` workflow permissions
+- workflow pull-request approval capability
 
-A missing or inaccessible branch-protection response is deliberately classified as `UNKNOWN`, not automatically as `FAIL`, because GitHub permissions can make those states ambiguous.
+Unavailable or permission-restricted settings are deliberately classified as `UNKNOWN`, not automatically as `FAIL`.
 
 ## CLI
 
@@ -74,6 +83,8 @@ evidence-pack-<UUID>/
     └── report.md
 ```
 
+A fully sanitized example is available under `examples/demo-evidence-pack/`. It contains fictitious repository identifiers only and is intended to demonstrate the evidence model without credentials or production data.
+
 ## Evidence principles
 
 - deterministic collection and evaluation
@@ -100,6 +111,17 @@ flowchart LR
     F --> J[GitHub Actions Artifact]
 ```
 
+## Quality and security gates
+
+The repository uses GitHub Actions for:
+
+- Ruff linting
+- strict Mypy type checking
+- pytest on Python 3.12 and 3.13
+- minimum 80% test coverage
+- Bandit static security analysis
+- pip-audit dependency vulnerability checks
+
 ## Technology
 
 - Python 3.12+
@@ -111,8 +133,8 @@ flowchart LR
 
 ## Roadmap
 
-- **v0.1** GitHub collector, Evidence Pack and scheduled automation
-- **v0.2** expanded GitHub security checks
+- **v0.1** GitHub collector, Evidence Pack, mappings and scheduled automation
+- **v0.2** expanded GitHub security checks and reporting
 - **v0.3** local/Linux evidence collector
 - **v0.4** vulnerability evidence integration
 - **v0.5** Azure evidence collector
