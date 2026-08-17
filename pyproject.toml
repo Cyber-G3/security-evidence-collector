@@ -33,6 +33,9 @@ sec-evidence = "sec_evidence.cli:app"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+sec_evidence = ["data/*.yaml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra"
