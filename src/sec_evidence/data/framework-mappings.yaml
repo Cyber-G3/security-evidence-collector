@@ -1,0 +1,53 @@
+frameworks:
+  ISO_IEC_27001_2022:
+    label: ISO/IEC 27001:2022 Annex A
+    references:
+      SEC-GOV-001:
+        - id: A.5.24
+          relationship: supports
+          note: Security reporting guidance can support preparation for information security incident management.
+      SEC-SDLC-001:
+        - id: A.5.2
+          relationship: supports
+          note: Defined code ownership can support allocation of information security responsibilities.
+        - id: A.8.4
+          relationship: supports
+          note: Code ownership can support governance of access to source code.
+      SEC-SDLC-002:
+        - id: A.8.32
+          relationship: supports
+          note: Protected default branches can support controlled change management.
+      SEC-SDLC-003:
+        - id: A.8.32
+          relationship: supports
+          note: Required pull-request review can support controlled changes.
+      SEC-CI-001:
+        - id: A.8.29
+          relationship: supports
+          note: Required automated status checks can support security testing in development and acceptance.
+        - id: A.8.32
+          relationship: supports
+          note: Required status validation can support change control.
+  NIS2_2022_2555:
+    label: Directive (EU) 2022/2555 (NIS2)
+    references:
+      SEC-GOV-001:
+        - id: Article 21(2)(b)
+          relationship: supports
+          note: Security reporting guidance can support incident handling processes.
+      SEC-SDLC-001:
+        - id: Article 21(2)(e)
+          relationship: supports
+          note: Defined code ownership can support security in acquisition, development and maintenance of systems.
+      SEC-SDLC-002:
+        - id: Article 21(2)(e)
+          relationship: supports
+          note: Branch governance can support security in development and maintenance processes.
+      SEC-SDLC-003:
+        - id: Article 21(2)(e)
+          relationship: supports
+          note: Independent review of code changes can support secure development and maintenance.
+      SEC-CI-001:
+        - id: Article 21(2)(e)
+          relationship: supports
+          note: Automated validation can support secure development and maintenance, including vulnerability handling practices.
