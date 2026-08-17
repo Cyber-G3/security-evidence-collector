@@ -1,0 +1,16 @@
+controls:
+  - id: SEC-GOV-001
+    title: Security reporting policy
+    description: A documented security vulnerability reporting policy is present in the repository.
+  - id: SEC-SDLC-001
+    title: Code ownership defined
+    description: Repository code ownership is explicitly defined for review and accountability.
+  - id: SEC-SDLC-002
+    title: Protected default branch
+    description: The default branch uses protection rules to govern changes.
+  - id: SEC-SDLC-003
+    title: Independent change review
+    description: Changes to the protected branch require pull-request review.
+  - id: SEC-CI-001
+    title: Required status validation
+    description: Required status checks validate changes before merge.
