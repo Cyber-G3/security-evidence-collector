@@ -6,6 +6,15 @@ Open-source security evidence collection and control-mapping toolkit for audit a
 
 > Development status: **Alpha / v0.1-dev**. The project is in release hardening and is not yet presented as production-ready.
 
+## Open the project
+
+- **Live tool:** https://cyber-g3.github.io/security-evidence-collector/
+- **GitHub repository:** https://github.com/Cyber-G3/security-evidence-collector
+- **Sanitized Evidence Pack demo:** https://github.com/Cyber-G3/security-evidence-collector/tree/main/examples/demo-evidence-pack
+- **GitHub Actions:** https://github.com/Cyber-G3/security-evidence-collector/actions
+
+The live page includes a **Public Quick Scan** for public GitHub repositories. Enter an `OWNER/REPOSITORY` value and select **Analyze** to inspect public repository-security signals without supplying a token. The full collector remains available through the CLI and GitHub Actions for deeper evidence collection.
+
 ## Why this exists
 
 Security and compliance teams often collect technical evidence manually across repositories and platforms. This project provides a deterministic, local-first pipeline:
