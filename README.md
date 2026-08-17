@@ -4,7 +4,7 @@
 
 Open-source security evidence collection and control-mapping toolkit for audit and compliance workflows.
 
-> Development status: **Alpha / v0.1-dev**. The project structure and CLI are being established. GitHub security evidence collection is the first planned collector and is not yet presented as production-ready.
+> Development status: **Alpha / v0.1-dev**. The GitHub collector is under active implementation and is not yet production-ready.
 
 ## Why this exists
 
@@ -14,21 +14,32 @@ Security and compliance teams often collect technical evidence manually across r
 Source -> Collect -> Normalize -> Hash -> Map -> Report
 ```
 
-The tool is designed to support evidence workflows. It does **not** determine regulatory compliance or certification status.
+The tool supports evidence workflows. It does **not** determine regulatory compliance or certification status.
 
-## Initial scope
+## Current GitHub checks
 
-The first collector will target GitHub and will focus on verifiable repository-security evidence such as repository metadata, branch governance, workflow configuration and selected security settings when the GitHub API exposes them reliably.
+The current collector implements repository and governance checks for:
 
-## Planned CLI
+- repository visibility
+- default branch identification
+- archived/active state
+- `SECURITY.md` presence
+- `CODEOWNERS` presence
+- default-branch protection when readable through the API
+- required pull-request reviews when branch protection is readable
+- required status checks when branch protection is readable
+
+A missing or inaccessible branch-protection response is deliberately classified as `UNKNOWN`, not automatically as `FAIL`, because GitHub permissions can make those states ambiguous.
+
+## CLI
 
 ```bash
 sec-evidence --help
 sec-evidence version
 sec-evidence collect github OWNER/REPOSITORY
-sec-evidence verify ./evidence-pack
-sec-evidence report ./evidence-pack
 ```
+
+Evidence-pack verification and report generation remain planned commands while their implementation is completed.
 
 ## Evidence principles
 
@@ -38,7 +49,7 @@ sec-evidence report ./evidence-pack
 - SHA-256 integrity verification for generated evidence artifacts
 - raw evidence separated from normalized evidence
 - control mappings separated from technical checks
-- no LLM/API dependency required at runtime
+- no LLM dependency required at runtime
 - local-first processing and no telemetry
 
 ## Architecture
@@ -60,7 +71,7 @@ flowchart LR
 - GitHub REST API
 - JSON / YAML / CSV / Markdown
 - SHA-256
-- pytest
+- pytest / respx
 - GitHub Actions
 
 ## Roadmap
