@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from sec_evidence import __version__
+from sec_evidence.control_mapping import load_check_mappings
+from sec_evidence.findings import build_findings
 from sec_evidence.integrity import sha256_file
 from sec_evidence.models import CheckResult
 
@@ -18,35 +20,97 @@ def _utc_now() -> datetime:
 
 def _write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
 
 
 def create_evidence_pack(repository: str, results: list[CheckResult], output_root: Path) -> Path:
-    """Persist normalized check results and a SHA-256 manifest."""
+    """Persist normalized checks, findings, mappings and a SHA-256 manifest."""
     collection_id = str(uuid.uuid4())
     pack = output_root / f"evidence-pack-{collection_id}"
     normalized = pack / "normalized" / "github"
     reports = pack / "reports"
-    findings = pack / "findings"
-    for directory in (normalized, reports, findings):
+    findings_dir = pack / "findings"
+    controls_dir = pack / "controls"
+    for directory in (normalized, reports, findings_dir, controls_dir):
         directory.mkdir(parents=True, exist_ok=False)
 
     started = _utc_now()
-    _write_json(pack / "metadata.json", {"collection_id": collection_id,"schema_version": "1.0","target": repository,"target_type": "github_repository","tool": "security-evidence-collector","tool_version": __version__,"generated_at": started.isoformat()})
+    _write_json(
+        pack / "metadata.json",
+        {
+            "collection_id": collection_id,
+            "schema_version": "1.0",
+            "target": repository,
+            "target_type": "github_repository",
+            "tool": "security-evidence-collector",
+            "tool_version": __version__,
+            "generated_at": started.isoformat(),
+        },
+    )
 
     for result in results:
         safe_id = result.check_id.replace(".", "_")
         _write_json(normalized / f"{safe_id}.json", result.model_dump(mode="json"))
 
-    report_lines = ["# Security Evidence Report","",f"Target: `{repository}`","","| Status | Check | Reason |","|---|---|---|"]
+    mappings = load_check_mappings()
+    findings = build_findings(results, mappings)
+    _write_json(findings_dir / "findings.json", {"findings": findings})
+    _write_json(
+        controls_dir / "check-control-mappings.json",
+        {
+            "mapping_type": "technical_check_to_internal_control",
+            "mappings": mappings,
+            "compliance_determination": False,
+        },
+    )
+
+    report_lines = [
+        "# Security Evidence Report",
+        "",
+        f"Target: `{repository}`",
+        "",
+        "> This report supports evidence and control analysis. It does not determine regulatory compliance.",
+        "",
+        "## Technical checks",
+        "",
+        "| Status | Check | Reason |",
+        "|---|---|---|",
+    ]
     for result in results:
         reason = result.reason.replace("|", "\\|")
         report_lines.append(f"| {result.status.value} | {result.title} | {reason} |")
+
+    report_lines.extend(["", "## Findings", ""])
+    if findings:
+        report_lines.extend(
+            [
+                "| ID | Severity | Finding | Controls |",
+                "|---|---|---|---|",
+            ]
+        )
+        for finding in findings:
+            controls = ", ".join(finding["control_ids"]) or "—"
+            report_lines.append(
+                f"| {finding['finding_id']} | {finding['severity']} | "
+                f"{finding['title']} | {controls} |"
+            )
+    else:
+        report_lines.append("No deterministic findings were generated from explicit FAIL results.")
+
     (reports / "report.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
 
     manifest_entries: list[dict[str, object]] = []
     for path in sorted(p for p in pack.rglob("*") if p.is_file() and p.name != "manifest.json"):
-        manifest_entries.append({"path": path.relative_to(pack).as_posix(),"sha256": sha256_file(path),"size_bytes": path.stat().st_size})
+        manifest_entries.append(
+            {
+                "path": path.relative_to(pack).as_posix(),
+                "sha256": sha256_file(path),
+                "size_bytes": path.stat().st_size,
+            }
+        )
     _write_json(pack / "manifest.json", {"algorithm": "sha256", "files": manifest_entries})
     return pack
 
