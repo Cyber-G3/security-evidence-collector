@@ -10,6 +10,7 @@ from pathlib import Path
 from sec_evidence import __version__
 from sec_evidence.control_mapping import load_check_mappings
 from sec_evidence.findings import build_findings
+from sec_evidence.framework_mapping import references_for_check
 from sec_evidence.integrity import sha256_file
 from sec_evidence.models import CheckResult
 
@@ -34,7 +35,8 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
     reports = pack / "reports"
     findings_dir = pack / "findings"
     controls_dir = pack / "controls"
-    for directory in (normalized, reports, findings_dir, controls_dir):
+    frameworks_dir = pack / "frameworks"
+    for directory in (normalized, reports, findings_dir, controls_dir, frameworks_dir):
         directory.mkdir(parents=True, exist_ok=False)
 
     started = _utc_now()
@@ -42,7 +44,7 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
         pack / "metadata.json",
         {
             "collection_id": collection_id,
-            "schema_version": "1.0",
+            "schema_version": "1.1",
             "target": repository,
             "target_type": "github_repository",
             "tool": "security-evidence-collector",
@@ -57,6 +59,11 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
 
     mappings = load_check_mappings()
     findings = build_findings(results, mappings)
+    framework_references = {
+        result.check_id: references_for_check(result.check_id)
+        for result in results
+        if references_for_check(result.check_id)
+    }
     _write_json(findings_dir / "findings.json", {"findings": findings})
     _write_json(
         controls_dir / "check-control-mappings.json",
@@ -66,13 +73,22 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
             "compliance_determination": False,
         },
     )
+    _write_json(
+        frameworks_dir / "framework-references.json",
+        {
+            "mapping_type": "internal_control_to_framework_reference",
+            "references_by_check": framework_references,
+            "relationship_semantics": "supports",
+            "compliance_determination": False,
+        },
+    )
 
     report_lines = [
         "# Security Evidence Report",
         "",
         f"Target: `{repository}`",
         "",
-        "> This report supports evidence and control analysis. It does not determine regulatory compliance.",
+        "> This report supports evidence and control analysis. Framework references indicate a supporting relationship only; they do not determine regulatory compliance, certification, or conformity.",
         "",
         "## Technical checks",
         "",
@@ -85,12 +101,7 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
 
     report_lines.extend(["", "## Findings", ""])
     if findings:
-        report_lines.extend(
-            [
-                "| ID | Severity | Finding | Controls |",
-                "|---|---|---|---|",
-            ]
-        )
+        report_lines.extend(["| ID | Severity | Finding | Controls |", "|---|---|---|---|"])
         for finding in findings:
             controls = ", ".join(finding["control_ids"]) or "—"
             report_lines.append(
@@ -99,6 +110,16 @@ def create_evidence_pack(repository: str, results: list[CheckResult], output_roo
             )
     else:
         report_lines.append("No deterministic findings were generated from explicit FAIL results.")
+
+    report_lines.extend(["", "## Framework references", ""])
+    report_lines.extend(["| Check | Internal control | Framework | Reference | Relationship |", "|---|---|---|---|---|"])
+    for check_id, references in framework_references.items():
+        for reference in references:
+            report_lines.append(
+                f"| {check_id} | {reference['internal_control']} | "
+                f"{reference['framework_label']} | {reference['reference']} | "
+                f"{reference['relationship']} |"
+            )
 
     (reports / "report.md").write_text("\n".join(report_lines) + "\n", encoding="utf-8")
 
