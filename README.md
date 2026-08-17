@@ -4,7 +4,7 @@
 
 Open-source security evidence collection and control-mapping toolkit for audit and compliance workflows.
 
-> Development status: **Alpha / v0.1-dev**. The project is in release hardening and is not yet presented as production-ready.
+> Release status: **v0.1.0 release candidate**. CI, security checks, GitHub Pages and the end-to-end Evidence Automation workflow have been validated on `main`. The project remains an early open-source release and should be evaluated before production use.
 
 ## Open the project
 
@@ -64,7 +64,7 @@ The collect command creates an integrity-verifiable Evidence Pack containing nor
 
 The repository includes `.github/workflows/evidence-automation.yml`.
 
-It can be launched manually with **workflow_dispatch** and also runs weekly on Monday. The workflow:
+It can be launched manually with **workflow_dispatch**, runs weekly on Monday, and self-tests when relevant collector or workflow code changes. The workflow:
 
 1. installs the project on GitHub-hosted Ubuntu;
 2. collects evidence against the current repository;
@@ -72,7 +72,7 @@ It can be launched manually with **workflow_dispatch** and also runs weekly on M
 4. verifies the SHA-256 manifest;
 5. uploads the verified pack as a GitHub Actions artifact for 30 days.
 
-The workflow uses the built-in `GITHUB_TOKEN`; no external paid API or server is required for this self-assessment workflow.
+The workflow uses the built-in `GITHUB_TOKEN`; no external paid API or server is required for this self-assessment workflow. Permission-restricted GitHub settings are represented as `UNKNOWN` instead of aborting the collection.
 
 ## Evidence Pack
 
@@ -130,6 +130,7 @@ The repository uses GitHub Actions for:
 - minimum 80% test coverage
 - Bandit static security analysis
 - pip-audit dependency vulnerability checks
+- end-to-end Evidence Pack generation and integrity verification
 
 ## Technology
 
