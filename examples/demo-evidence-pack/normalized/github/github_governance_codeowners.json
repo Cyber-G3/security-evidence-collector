@@ -1,0 +1,11 @@
+{
+  "check_id": "github.governance.codeowners",
+  "collected_at": "2026-08-17T20:00:00Z",
+  "confidence": "HIGH",
+  "metadata": {},
+  "raw_evidence_reference": null,
+  "reason": "A CODEOWNERS file was found in a supported repository path.",
+  "source": "github",
+  "status": "PASS",
+  "title": "CODEOWNERS"
+}
