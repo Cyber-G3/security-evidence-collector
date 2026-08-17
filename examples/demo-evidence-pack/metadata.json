@@ -1,0 +1,9 @@
+{
+  "collection_id": "00000000-0000-4000-8000-000000000001",
+  "generated_at": "2026-08-17T20:00:00+00:00",
+  "schema_version": "1.1",
+  "target": "example-org/example-repository",
+  "target_type": "github_repository",
+  "tool": "security-evidence-collector",
+  "tool_version": "0.1.0.dev0"
+}
