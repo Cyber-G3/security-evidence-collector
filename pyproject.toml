@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "security-evidence-collector"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Deterministic security evidence collection and control-mapping toolkit"
 readme = "README.md"
 requires-python = ">=3.12"
