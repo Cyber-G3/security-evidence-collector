@@ -53,19 +53,16 @@ def collect_devsecops_checks(
     collected_at: datetime,
 ) -> list[CheckResult]:
     """Collect repository security-feature and GitHub Actions policy checks."""
+    dependabot_present = client.content_exists(repository, DEPENDABOT_PATH)
     results = [
         CheckResult(
             check_id="github.dependencies.dependabot_config",
             title="Dependabot configuration present",
-            status=(
-                CheckStatus.PASS
-                if client.content_exists(repository, DEPENDABOT_PATH)
-                else CheckStatus.FAIL
-            ),
+            status=CheckStatus.PASS if dependabot_present else CheckStatus.FAIL,
             confidence=Confidence.HIGH,
             reason=(
                 "Repository contains .github/dependabot.yml."
-                if client.content_exists(repository, DEPENDABOT_PATH)
+                if dependabot_present
                 else "Repository does not contain .github/dependabot.yml."
             ),
             source="github",
