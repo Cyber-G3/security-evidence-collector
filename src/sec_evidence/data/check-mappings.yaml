@@ -1,0 +1,16 @@
+mappings:
+  github.governance.security_policy:
+    controls: [SEC-GOV-001]
+    mapping_status: curated
+  github.governance.codeowners:
+    controls: [SEC-SDLC-001]
+    mapping_status: curated
+  github.branch.protection:
+    controls: [SEC-SDLC-002]
+    mapping_status: curated
+  github.branch.required_reviews:
+    controls: [SEC-SDLC-003]
+    mapping_status: curated
+  github.branch.required_status_checks:
+    controls: [SEC-CI-001]
+    mapping_status: curated
