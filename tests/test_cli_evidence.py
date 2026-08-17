@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -5,7 +6,6 @@ from typer.testing import CliRunner
 from sec_evidence.cli import app
 from sec_evidence.evidence_pack import create_evidence_pack
 from sec_evidence.models import CheckResult, CheckStatus, Confidence
-from datetime import datetime, timezone
 
 runner = CliRunner()
 
