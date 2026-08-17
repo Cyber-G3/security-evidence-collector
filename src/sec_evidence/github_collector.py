@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from sec_evidence.github_client import GitHubClient
+from sec_evidence.github_security_checks import collect_devsecops_checks
 from sec_evidence.models import CheckResult, CheckStatus, Confidence
 
 SECURITY_POLICY_PATHS = ("SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md")
@@ -45,7 +46,7 @@ def _file_presence_result(
 
 
 def collect_repository_metadata(repository: str, client: GitHubClient) -> list[CheckResult]:
-    """Collect deterministic repository metadata and governance checks."""
+    """Collect deterministic repository metadata, governance and DevSecOps checks."""
     payload = client.get_repository(repository)
     collected_at = datetime.now(timezone.utc)
 
@@ -121,6 +122,8 @@ def collect_repository_metadata(repository: str, client: GitHubClient) -> list[C
             collected_at=collected_at,
         ),
     ]
+
+    results.extend(collect_devsecops_checks(repository, payload, client, collected_at))
 
     if isinstance(default_branch, str) and default_branch:
         protection = client.get_branch_protection(repository, default_branch)
