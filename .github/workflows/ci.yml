@@ -34,4 +34,4 @@ jobs:
         run: mypy src
 
       - name: Tests
-        run: pytest --cov=sec_evidence --cov-report=term-missing
+        run: pytest --cov=sec_evidence --cov-report=term-missing --cov-fail-under=80
