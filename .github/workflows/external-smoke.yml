@@ -1,0 +1,77 @@
+name: External Repository Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - ".github/workflows/external-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repository:
+          - pallets/flask
+          - fastapi/fastapi
+          - psf/requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project
+        run: python -m pip install -e .
+
+      - name: Collect public repository evidence
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p smoke-output
+          sec-evidence collect github "${{ matrix.repository }}" --output smoke-output
+
+      - name: Resolve Evidence Pack
+        id: pack
+        shell: bash
+        run: |
+          PACK="$(find smoke-output -maxdepth 1 -type d -name 'evidence-pack-*' | head -n 1)"
+          test -n "$PACK"
+          echo "path=$PACK" >> "$GITHUB_OUTPUT"
+
+      - name: Verify SHA-256 manifest
+        run: sec-evidence verify "${{ steps.pack.outputs.path }}"
+
+      - name: Reject fatal ERROR findings
+        env:
+          PACK: ${{ steps.pack.outputs.path }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["PACK"]) / "findings" / "findings.json"
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          findings = payload.get("findings", [])
+          errors = [f for f in findings if str(f.get("status", "")).upper() == "ERROR"]
+          if errors:
+              raise SystemExit(f"Fatal ERROR findings found: {errors}")
+          print(f"Smoke test OK: {len(findings)} findings; no ERROR states")
+          PY
+
+      - name: Upload smoke Evidence Pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-smoke-${{ strategy.job-index }}
+          path: ${{ steps.pack.outputs.path }}
+          retention-days: 7
