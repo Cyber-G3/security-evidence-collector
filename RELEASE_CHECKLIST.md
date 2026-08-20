@@ -25,7 +25,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] SECURITY.md present.
 - [x] No runtime LLM dependency.
 - [x] Credentials are not written to Evidence Packs.
-- [x] CI and Security workflows were green on the release-candidate implementation head before checklist synchronization.
+- [x] CI and Security workflows green on current release-candidate head.
 
 ## Automation
 
@@ -43,14 +43,15 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] README includes Quick Start, architecture, checks, security model and disclaimer.
 - [x] CHANGELOG.md exists.
 - [x] Apache-2.0 licensing is declared.
-- [ ] GitHub Pages deployment confirmed reachable.
+- [ ] GitHub Pages deployment confirmed reachable on final release state.
 
 ## Release
 
 - [x] Package version set to 0.1.0.
 - [x] README marks v0.1.0 release candidate state.
 - [x] v0.1.0 changelog prepared.
-- [ ] All release workflows green on the final release commit.
+- [x] Release-candidate CI and Security workflows green.
+- [ ] Re-run release workflows after merge to `main`.
 - [ ] Tag v0.1.0 created.
 - [ ] GitHub Release v0.1.0 published.
 
