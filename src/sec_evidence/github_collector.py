@@ -19,11 +19,19 @@ SECURITY_POLICY_PATHS = ("SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md
 CODEOWNERS_PATHS = ("CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS")
 
 
-def _github_evidence_metadata(repository: str) -> EvidenceMetadata:
-    """Return portable collection metadata shared by GitHub-derived evidence."""
+def _evidence_type_for_check(check_id: str) -> str:
+    """Return a normalized evidence type without making assurance judgments."""
+    if check_id.startswith("github.governance."):
+        return "document"
+    return "configuration"
+
+
+def _github_evidence_metadata(repository: str, check_id: str) -> EvidenceMetadata:
+    """Return portable collection metadata for one GitHub-derived evidence item."""
     owner, _, _repo = repository.partition("/")
     return EvidenceMetadata(
-        evidence_type="configuration",
+        evidence_id=f"github:{repository}:{check_id}",
+        evidence_type=_evidence_type_for_check(check_id),
         source_system="github",
         source_version="rest-api-v3",
         collector_version=__version__,
@@ -38,7 +46,7 @@ def _github_evidence_metadata(repository: str) -> EvidenceMetadata:
 def _attach_github_evidence_metadata(repository: str, results: list[CheckResult]) -> list[CheckResult]:
     """Attach a fresh metadata object to each collected result."""
     for result in results:
-        result.evidence = _github_evidence_metadata(repository)
+        result.evidence = _github_evidence_metadata(repository, result.check_id)
     return results
 
 
