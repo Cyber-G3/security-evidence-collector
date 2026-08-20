@@ -32,10 +32,15 @@
       "required": ["schema_version", "freshness", "scope"],
       "properties": {
         "schema_version": {"const": "1.0"},
+        "evidence_id": {"type": ["string", "null"]},
         "evidence_type": {"type": ["string", "null"]},
         "source_system": {"type": ["string", "null"]},
         "source_version": {"type": ["string", "null"]},
         "collector_version": {"type": ["string", "null"]},
+        "content_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
         "valid_from": {"type": ["string", "null"], "format": "date-time"},
         "valid_until": {"type": ["string", "null"], "format": "date-time"},
         "freshness": {
