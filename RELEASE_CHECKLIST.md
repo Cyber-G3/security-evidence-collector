@@ -25,7 +25,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] SECURITY.md present.
 - [x] No runtime LLM dependency.
 - [x] Credentials are not written to Evidence Packs.
-- [x] CI and Security workflows green on the current release-candidate head.
+- [x] CI and Security workflows were green on the release-candidate implementation head before checklist synchronization.
 
 ## Automation
 
