@@ -33,7 +33,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] Evidence Pack verification occurs before artifact upload.
 - [x] Weekly schedule and workflow_dispatch are available.
 - [x] External repository smoke-test workflow exists.
-- [ ] External smoke matrix passes for pallets/flask, fastapi/fastapi and psf/requests.
+- [x] External smoke matrix passes for pallets/flask, fastapi/fastapi and psf/requests on the pull-request release candidate.
 
 ## Demo and documentation
 
@@ -50,7 +50,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] Package version set to 0.1.0.
 - [x] README marks v0.1.0 release candidate state.
 - [x] v0.1.0 changelog prepared.
-- [x] Release-candidate CI and Security workflows green.
+- [x] Release-candidate CI, Security and external smoke workflows green.
 - [ ] Re-run release workflows after merge to `main`.
 - [ ] Tag v0.1.0 created.
 - [ ] GitHub Release v0.1.0 published.
