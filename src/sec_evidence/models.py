@@ -3,8 +3,7 @@
 from datetime import datetime, timezone
 from enum import StrEnum
 
-from pydantic import BaseModel, Field, field_validator
-
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 EVIDENCE_SCHEMA_VERSION = "1.0"
 
@@ -52,10 +51,12 @@ class EvidenceMetadata(BaseModel):
     """Machine-readable metadata that makes evidence portable across products."""
 
     schema_version: str = EVIDENCE_SCHEMA_VERSION
+    evidence_id: str | None = None
     evidence_type: str | None = None
     source_system: str | None = None
     source_version: str | None = None
     collector_version: str | None = None
+    content_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     valid_from: datetime | None = None
     valid_until: datetime | None = None
     freshness: EvidenceFreshness = EvidenceFreshness.UNKNOWN
@@ -69,6 +70,13 @@ class EvidenceMetadata(BaseModel):
         if value.tzinfo is None or value.utcoffset() is None:
             raise ValueError("evidence validity timestamps must be timezone-aware")
         return value.astimezone(timezone.utc)
+
+    @model_validator(mode="after")
+    def validate_validity_interval(self) -> "EvidenceMetadata":
+        if self.valid_from is not None and self.valid_until is not None:
+            if self.valid_until < self.valid_from:
+                raise ValueError("valid_until must be greater than or equal to valid_from")
+        return self
 
 
 class CheckResult(BaseModel):
