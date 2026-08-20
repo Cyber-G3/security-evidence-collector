@@ -38,9 +38,15 @@ def test_github_results_include_portable_evidence_metadata() -> None:
         results = collect_repository_metadata(repository, client)
 
     assert results
+    evidence_ids: set[str] = set()
     for result in results:
         assert result.evidence.schema_version == "1.0"
-        assert result.evidence.evidence_type == "configuration"
+        assert result.evidence.evidence_id == f"github:{repository}:{result.check_id}"
+        assert result.evidence.evidence_id not in evidence_ids
+        evidence_ids.add(result.evidence.evidence_id)
+        assert result.evidence.evidence_type in {"configuration", "document"}
+        if result.check_id.startswith("github.governance."):
+            assert result.evidence.evidence_type == "document"
         assert result.evidence.source_system == "github"
         assert result.evidence.source_version == "rest-api-v3"
         assert result.evidence.collector_version == __version__
