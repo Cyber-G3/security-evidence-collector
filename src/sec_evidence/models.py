@@ -73,9 +73,12 @@ class EvidenceMetadata(BaseModel):
 
     @model_validator(mode="after")
     def validate_validity_interval(self) -> "EvidenceMetadata":
-        if self.valid_from is not None and self.valid_until is not None:
-            if self.valid_until < self.valid_from:
-                raise ValueError("valid_until must be greater than or equal to valid_from")
+        if (
+            self.valid_from is not None
+            and self.valid_until is not None
+            and self.valid_until < self.valid_from
+        ):
+            raise ValueError("valid_until must be greater than or equal to valid_from")
         return self
 
 
