@@ -4,12 +4,42 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+from sec_evidence import __version__
 from sec_evidence.github_client import GitHubClient
 from sec_evidence.github_security_checks import collect_devsecops_checks
-from sec_evidence.models import CheckResult, CheckStatus, Confidence
+from sec_evidence.models import (
+    CheckResult,
+    CheckStatus,
+    Confidence,
+    EvidenceMetadata,
+    EvidenceScope,
+)
 
 SECURITY_POLICY_PATHS = ("SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md")
 CODEOWNERS_PATHS = ("CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS")
+
+
+def _github_evidence_metadata(repository: str) -> EvidenceMetadata:
+    """Return portable collection metadata shared by GitHub-derived evidence."""
+    owner, _, _repo = repository.partition("/")
+    return EvidenceMetadata(
+        evidence_type="configuration",
+        source_system="github",
+        source_version="rest-api-v3",
+        collector_version=__version__,
+        scope=EvidenceScope(
+            organization_id=owner or None,
+            asset_id=repository,
+            collection_scope="repository",
+        ),
+    )
+
+
+def _attach_github_evidence_metadata(repository: str, results: list[CheckResult]) -> list[CheckResult]:
+    """Attach a fresh metadata object to each collected result."""
+    for result in results:
+        result.evidence = _github_evidence_metadata(repository)
+    return results
 
 
 def _file_presence_result(
@@ -211,4 +241,4 @@ def collect_repository_metadata(repository: str, client: GitHubClient) -> list[C
                 ]
             )
 
-    return results
+    return _attach_github_evidence_metadata(repository, results)
