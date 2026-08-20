@@ -2,7 +2,13 @@ import json
 from datetime import datetime, timezone
 
 from sec_evidence.evidence_pack import create_evidence_pack, verify_evidence_pack
-from sec_evidence.models import CheckResult, CheckStatus, Confidence, EvidenceMetadata, EvidenceScope
+from sec_evidence.models import (
+    CheckResult,
+    CheckStatus,
+    Confidence,
+    EvidenceMetadata,
+    EvidenceScope,
+)
 
 
 def _result() -> CheckResult:
@@ -15,6 +21,7 @@ def _result() -> CheckResult:
         source="github",
         collected_at=datetime(2026, 8, 17, tzinfo=timezone.utc),
         evidence=EvidenceMetadata(
+            evidence_id="github.repository.visibility:Cyber-G3/example",
             evidence_type="configuration",
             source_system="github",
             source_version="rest-api-v3",
@@ -44,6 +51,7 @@ def test_serialized_evidence_pack_preserves_contract_metadata(tmp_path) -> None:
     payload = json.loads(evidence_path.read_text(encoding="utf-8"))
 
     assert payload["evidence"]["schema_version"] == "1.0"
+    assert payload["evidence"]["evidence_id"] == "github.repository.visibility:Cyber-G3/example"
     assert payload["evidence"]["evidence_type"] == "configuration"
     assert payload["evidence"]["source_system"] == "github"
     assert payload["evidence"]["source_version"] == "rest-api-v3"
