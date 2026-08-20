@@ -9,6 +9,10 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] Evidence Pack generation is implemented.
 - [x] SHA-256 manifest verification is implemented.
 - [x] Internal control mappings and ISO/IEC 27001:2022 / NIS2 supporting references are separated from compliance determinations.
+- [x] Evidence Contract v1 is versioned and documented.
+- [x] Stable `evidence_id`, source/collector metadata and scope references are available.
+- [x] Freshness and validity metadata are represented without making assurance decisions.
+- [x] Formal JSON Schema exists for downstream consumers.
 
 ## Quality and security
 
@@ -21,6 +25,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] SECURITY.md present.
 - [x] No runtime LLM dependency.
 - [x] Credentials are not written to Evidence Packs.
+- [x] CI and Security workflows green on the current release-candidate head.
 
 ## Automation
 
