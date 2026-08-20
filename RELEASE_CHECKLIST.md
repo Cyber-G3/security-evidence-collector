@@ -9,6 +9,10 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] Evidence Pack generation is implemented.
 - [x] SHA-256 manifest verification is implemented.
 - [x] Internal control mappings and ISO/IEC 27001:2022 / NIS2 supporting references are separated from compliance determinations.
+- [x] Evidence Contract v1 is versioned and documented.
+- [x] Stable `evidence_id`, source/collector metadata and scope references are available.
+- [x] Freshness and validity metadata are represented without making assurance decisions.
+- [x] Formal JSON Schema exists for downstream consumers.
 
 ## Quality and security
 
@@ -21,6 +25,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] SECURITY.md present.
 - [x] No runtime LLM dependency.
 - [x] Credentials are not written to Evidence Packs.
+- [x] CI and Security workflows green on current release-candidate head.
 
 ## Automation
 
@@ -28,7 +33,7 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] Evidence Pack verification occurs before artifact upload.
 - [x] Weekly schedule and workflow_dispatch are available.
 - [x] External repository smoke-test workflow exists.
-- [ ] External smoke matrix passes for pallets/flask, fastapi/fastapi and psf/requests.
+- [x] External smoke matrix passes for pallets/flask, fastapi/fastapi and psf/requests on the pull-request release candidate.
 
 ## Demo and documentation
 
@@ -38,14 +43,15 @@ This checklist defines the release gate for Security Evidence Collector v0.1.0. 
 - [x] README includes Quick Start, architecture, checks, security model and disclaimer.
 - [x] CHANGELOG.md exists.
 - [x] Apache-2.0 licensing is declared.
-- [ ] GitHub Pages deployment confirmed reachable.
+- [ ] GitHub Pages deployment confirmed reachable on final release state.
 
 ## Release
 
 - [x] Package version set to 0.1.0.
 - [x] README marks v0.1.0 release candidate state.
 - [x] v0.1.0 changelog prepared.
-- [ ] All release workflows green on the final release commit.
+- [x] Release-candidate CI, Security and external smoke workflows green.
+- [ ] Re-run release workflows after merge to `main`.
 - [ ] Tag v0.1.0 created.
 - [ ] GitHub Release v0.1.0 published.
 
