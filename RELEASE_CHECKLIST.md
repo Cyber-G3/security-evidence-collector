@@ -2,6 +2,8 @@
 
 This checklist defines the release gate for Security Evidence Collector v0.1.0. New product features are out of scope until these gates are closed.
 
+> Final release verification refreshed on 2026-08-25. This documentation-only commit intentionally re-runs the push-triggered CI, Security, External Repository Smoke Test and Pages deployment workflows on `main`.
+
 ## Core
 
 - [x] GitHub collector produces normalized evidence.
