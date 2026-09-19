@@ -158,6 +158,10 @@ The tool is intended to operate read-only against source systems. Credentials mu
 
 Framework mappings are provided to support evidence organization and control analysis. A technical check passing does not mean an organization is ISO 27001 compliant, NIS2 compliant, certified, or audit-ready.
 
+## Portfolio case
+
+For the engineering and business case behind this project, see [docs/PORTFOLIO.md](docs/PORTFOLIO.md).
+
 ## License
 
 Apache-2.0.
