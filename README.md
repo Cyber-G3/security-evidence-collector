@@ -162,6 +162,9 @@ Framework mappings are provided to support evidence organization and control ana
 
 For the engineering and business case behind this project, see [docs/PORTFOLIO.md](docs/PORTFOLIO.md).
 
+- [Assurance Engineering architecture](docs/ASSURANCE-ENGINEERING.md)
+- [DemoCo end-to-end scenario](docs/DEMOCO-END-TO-END.md)
+
 ## License
 
 Apache-2.0.
